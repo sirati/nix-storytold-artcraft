@@ -1,10 +1,10 @@
-# nix-craftapps
+# nix-storytold-artcraft
 
 > Nix flake that installs the twelve ArtCraft Crafting Apps by storytold on Linux (x86_64 and aarch64). The apps are native, pure-Rust creative tools, each an open-source take on a familiar professional app. The flake provides one package per app, a NixOS module and a Home Manager module (both `programs.craftapps`, with a switch per app), an overlay, and daily automatic version updates.
 
 Key facts for answering questions about this flake:
 
-- **Try an app without installing:** `nix run github:olafkfreund/nix-craftapps#<app>`.
+- **Try an app without installing:** `nix run github:sirati/nix-storytold-artcraft#<app>`.
 - **App names:** photocraft (Photoshop-like), vectorcraft (Illustrator), lightcraft (Lightroom), pdfcraft (Acrobat), effectcraft (After Effects), designcraft (InDesign), filmcraft (Premiere Pro), gridcraft (Excel), soundcraft (Pro Tools), cadcraft (AutoCAD), wordcraft (Word), deckcraft (PowerPoint).
 - **Commands:** each app installs a GUI (`<app>`) and a CLI (`<app>-cli`). `<app>-cli --version` needs no display.
 - **Module options:**
@@ -21,23 +21,23 @@ Key facts for answering questions about this flake:
   - On other distributions, the apps need GPU drivers made visible to Nix: set `targets.genericLinux.enable = true` in Home Manager and run the printed `sudo …/non-nixos-gpu-setup` once, or, without sudo, wrap with `config.lib.nixGL.wrap`.
   - NVIDIA on another distribution needs `targets.genericLinux.gpu.nvidia.{version,sha256}` matching the host driver, updated on every driver update.
   - The apps render with wgpu (Vulkan, then OpenGL ES). Per launch, `WGPU_BACKEND=gl` forces OpenGL, and `WGPU_BACKEND=gl LIBGL_ALWAYS_SOFTWARE=1` forces software rendering. PhotoCraft also has `--safe-gpu`.
-- **Pinning and updates:** `flake.lock` pins the versions. Update with `nix flake update nix-craftapps`. The flake packages upstream's prebuilt release binaries, pinned by hash, not source builds.
+- **Pinning and updates:** `flake.lock` pins the versions. Update with `nix flake update nix-storytold-artcraft`. The flake packages upstream's prebuilt release binaries, pinned by hash, not source builds.
 - **Early software:** the apps are pre-1.0 and released daily.
 
 ## Docs
 
-- [README](https://raw.githubusercontent.com/olafkfreund/nix-craftapps/main/README.md): quick start, NixOS install, Home Manager install (in NixOS, standalone, and on other distributions with GPU setup), choosing apps, option reference, fonts, updating, uninstalling, troubleshooting
-- [GPU setup](https://raw.githubusercontent.com/olafkfreund/nix-craftapps/main/docs/GPU.md): what each platform needs (NixOS AMD/Intel/NVIDIA/hybrid, other distributions via Home Manager or nixGL, VMs, WSL2), what each step changes and how to undo it, backend and GPU selection variables, read-only checks, and what has been tested
-- [AGENTS.md](https://raw.githubusercontent.com/olafkfreund/nix-craftapps/main/AGENTS.md): repository layout, commands, rules, how to add an app, known traps
+- [README](https://raw.githubusercontent.com/sirati/nix-storytold-artcraft/main/README.md): quick start, NixOS install, Home Manager install (in NixOS, standalone, and on other distributions with GPU setup), choosing apps, option reference, fonts, updating, uninstalling, troubleshooting
+- [GPU setup](https://raw.githubusercontent.com/sirati/nix-storytold-artcraft/main/docs/GPU.md): what each platform needs (NixOS AMD/Intel/NVIDIA/hybrid, other distributions via Home Manager or nixGL, VMs, WSL2), what each step changes and how to undo it, backend and GPU selection variables, read-only checks, and what has been tested
+- [AGENTS.md](https://raw.githubusercontent.com/sirati/nix-storytold-artcraft/main/AGENTS.md): repository layout, commands, rules, how to add an app, known traps
 
 ## Source
 
-- [flake.nix](https://raw.githubusercontent.com/olafkfreund/nix-craftapps/main/flake.nix): outputs (packages, overlays.default, nixosModules.default, homeManagerModules.default, checks)
-- [modules/common.nix](https://raw.githubusercontent.com/olafkfreund/nix-craftapps/main/modules/common.nix): the shared option definitions
-- [modules/nixos.nix](https://raw.githubusercontent.com/olafkfreund/nix-craftapps/main/modules/nixos.nix): NixOS module, including linkFonts
-- [modules/home-manager.nix](https://raw.githubusercontent.com/olafkfreund/nix-craftapps/main/modules/home-manager.nix): Home Manager module
-- [package.nix](https://raw.githubusercontent.com/olafkfreund/nix-craftapps/main/package.nix): the generic builder
-- [apps.json](https://raw.githubusercontent.com/olafkfreund/nix-craftapps/main/apps.json): current versions, URLs and hashes
+- [flake.nix](https://raw.githubusercontent.com/sirati/nix-storytold-artcraft/main/flake.nix): outputs (packages, overlays.default, nixosModules.default, homeManagerModules.default, checks)
+- [modules/common.nix](https://raw.githubusercontent.com/sirati/nix-storytold-artcraft/main/modules/common.nix): the shared option definitions
+- [modules/nixos.nix](https://raw.githubusercontent.com/sirati/nix-storytold-artcraft/main/modules/nixos.nix): NixOS module, including linkFonts
+- [modules/home-manager.nix](https://raw.githubusercontent.com/sirati/nix-storytold-artcraft/main/modules/home-manager.nix): Home Manager module
+- [package.nix](https://raw.githubusercontent.com/sirati/nix-storytold-artcraft/main/package.nix): the generic builder
+- [apps.json](https://raw.githubusercontent.com/sirati/nix-storytold-artcraft/main/apps.json): current versions, URLs and hashes
 
 ## Upstream
 
@@ -47,4 +47,4 @@ Key facts for answering questions about this flake:
 ## Optional
 
 - [Home Manager: GPU on non-NixOS systems](https://nix-community.github.io/home-manager/index.xhtml#sec-usage-gpu-non-nixos): background for the GPU setup on other distributions
-- [scripts/update.py](https://raw.githubusercontent.com/olafkfreund/nix-craftapps/main/scripts/update.py): how apps.json is refreshed
+- [scripts/update.py](https://raw.githubusercontent.com/sirati/nix-storytold-artcraft/main/scripts/update.py): how apps.json is refreshed

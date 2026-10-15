@@ -1,6 +1,11 @@
-# nix-craftapps
+# nix-storytold-artcraft
 
 Install the [ArtCraft](https://getartcraft.com/apps) Crafting Apps with Nix.
+
+This is a fork of
+[olafkfreund/nix-craftapps](https://github.com/olafkfreund/nix-craftapps)
+(MIT). The fork's update workflow commits verified updates straight to `main`
+instead of opening a pull request, so it needs no repository settings.
 
 [storytold](https://github.com/storytold) makes twelve native creative apps,
 written in pure Rust. Each is an open-source, clean-room take on a familiar
@@ -59,21 +64,21 @@ launcher entry and icons.
 ## Quick start: try an app without installing
 
 ```sh
-nix run github:olafkfreund/nix-craftapps#photocraft
+nix run github:sirati/nix-storytold-artcraft#photocraft
 ```
 
 Swap in any app name from the table. To get both the GUI and its CLI in a
 temporary shell:
 
 ```sh
-nix shell github:olafkfreund/nix-craftapps#deckcraft
+nix shell github:sirati/nix-storytold-artcraft#deckcraft
 deckcraft-cli --version
 ```
 
 To have all twelve in a temporary shell:
 
 ```sh
-nix shell github:olafkfreund/nix-craftapps
+nix shell github:sirati/nix-storytold-artcraft
 ```
 
 Nothing is installed. The apps disappear at the next garbage collection.
@@ -89,18 +94,18 @@ In your system `flake.nix`:
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    nix-craftapps = {
-      url = "github:olafkfreund/nix-craftapps";
+    nix-storytold-artcraft = {
+      url = "github:sirati/nix-storytold-artcraft";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { nixpkgs, nix-craftapps, ... }: {
+  outputs = { nixpkgs, nix-storytold-artcraft, ... }: {
     nixosConfigurations.my-machine = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
         ./configuration.nix
-        nix-craftapps.nixosModules.default
+        nix-storytold-artcraft.nixosModules.default
       ];
     };
   };
@@ -152,7 +157,7 @@ the module for the user:
 ```nix
 # in your NixOS modules, with home-manager.nixosModules.home-manager imported
 {
-  home-manager.sharedModules = [ inputs.nix-craftapps.homeManagerModules.default ];
+  home-manager.sharedModules = [ inputs.nix-storytold-artcraft.homeManagerModules.default ];
 
   home-manager.users.alice = {
     programs.craftapps = {
@@ -183,17 +188,17 @@ Your `~/.config/home-manager/flake.nix`:
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-craftapps = {
-      url = "github:olafkfreund/nix-craftapps";
+    nix-storytold-artcraft = {
+      url = "github:sirati/nix-storytold-artcraft";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { nixpkgs, home-manager, nix-craftapps, ... }: {
+  outputs = { nixpkgs, home-manager, nix-storytold-artcraft, ... }: {
     homeConfigurations.alice = home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
       modules = [
-        nix-craftapps.homeManagerModules.default
+        nix-storytold-artcraft.homeManagerModules.default
         ./home.nix
       ];
     };
@@ -297,7 +302,7 @@ Without the modules, `overlays.default` adds `pkgs.craftapps.<name>`, plus
 `pkgs.craftapps.craftapps-all` with every app. For example:
 
 ```nix
-nixpkgs.overlays = [ inputs.nix-craftapps.overlays.default ];
+nixpkgs.overlays = [ inputs.nix-storytold-artcraft.overlays.default ];
 environment.systemPackages = [ pkgs.craftapps.photocraft ];
 ```
 
@@ -321,14 +326,14 @@ your `fonts.packages` becomes visible to the apps.
 Your `flake.lock` pins the app versions. To move to the newest releases:
 
 ```sh
-nix flake update nix-craftapps
+nix flake update nix-storytold-artcraft
 ```
 
 Then rebuild (`nixos-rebuild switch` or `home-manager switch`).
 
 This repository checks storytold's releases every day. When a release is
-out, a pull request adds it to `apps.json`, and CI builds and tests every app
-on both architectures before the change is merged.
+out, the update workflow builds and tests every app on both architectures,
+and only then commits the new `apps.json` to `main`.
 
 To go back, run `git checkout flake.lock` before rebuilding. On NixOS you can
 also boot the previous generation.

@@ -32,7 +32,7 @@ in
       package = lib.mkOption {
         type = lib.types.package;
         default = available.${name};
-        defaultText = lib.literalExpression "nix-craftapps.packages.\${system}.${name}";
+        defaultText = lib.literalExpression "nix-storytold-artcraft.packages.\${system}.${name}";
         description = "The ${name} package to install.";
       };
     });

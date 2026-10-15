@@ -269,7 +269,7 @@ system changes.
 **Just trying an app**, with no Home Manager (Mesa: AMD, Intel or nouveau):
 
 ```sh
-nix shell github:olafkfreund/nix-craftapps#photocraft \
+nix shell github:sirati/nix-storytold-artcraft#photocraft \
   -c nix run github:nix-community/nixGL#nixGLIntel -- photocraft
 ```
 
@@ -285,7 +285,7 @@ NVIDIA, use `nix run --impure github:nix-community/nixGL -- photocraft`;
 ```nix
 { config, inputs, ... }:
 let
-  craft = inputs.nix-craftapps.packages.x86_64-linux;
+  craft = inputs.nix-storytold-artcraft.packages.x86_64-linux;
 in
 {
   targets.genericLinux.nixGL.packages = inputs.nixGL.packages;
@@ -400,8 +400,9 @@ your driver setup above.
 
 ## What has been tested
 
-Tested by launching the GUIs on real hardware with
-`nix-craftapps` (October 2026):
+Tested by the original author, olafkfreund, by launching the GUIs on real
+hardware with `nix-craftapps` (October 2026). This fork has not repeated these
+tests:
 
 | Setup | Result |
 | --- | --- |
