@@ -27,7 +27,7 @@ modules/nixos.nix         + linkFonts (fonts.fontDir + /usr/share/fonts tmpfiles
 modules/home-manager.nix  home.packages; no linkFonts (HM cannot write /usr/share)
 scripts/update.py         refreshes apps.json from GitHub releases (stdlib only)
 .github/workflows/ci.yml      nix flake check on x86_64 and aarch64 runners
-.github/workflows/update.yml  daily update.py → flake check → PR → dispatch ci.yml
+.github/workflows/update.yml  daily update.py → flake check on both arches → push to main
 ```
 
 ## Commands
@@ -97,9 +97,13 @@ When storytold publishes a 13th app:
   when `fonts.fontDir.enable` is on. `linkFonts` sets that.
 - **`<app>-cli --help` is not consistent.** Several CLIs print usage and exit
   1 or 2. `--version` exits 0 everywhere, and the `cli` check uses it.
-- **CI on update PRs.** A PR opened with `GITHUB_TOKEN` does not trigger
-  `pull_request` workflows, so `update.yml` dispatches `ci.yml` on the PR
-  branch itself.
+- **No PRs from the update workflow.** Opening a PR with `GITHUB_TOKEN`
+  fails with "GitHub Actions is not permitted to create or approve pull
+  requests" unless that repository setting is on, and it is off by default.
+  `update.yml` therefore runs `update.py` in one job, checks the resulting
+  patch on both architectures in a second, and pushes to `main` from a third.
+  A push made with `GITHUB_TOKEN` does not trigger `ci.yml`, which is fine
+  because the same check already ran.
 - **GPU.** All apps render through wgpu (egui/eframe): Vulkan first, then
   GLES through EGL. Drivers are found only in `/run/opengl-driver`.
   `WGPU_BACKEND=gl` is honoured (verified). The modules must never set
@@ -114,6 +118,6 @@ When storytold publishes a 13th app:
 ## Commits and PRs
 
 - **Commit messages:** Conventional Commits (`feat:`, `fix:`, `chore:`,
-  `docs:`). Update PRs from the workflow are titled `chore: update Craft
-  apps`.
+  `docs:`). Update commits from the workflow are titled `chore: update Craft
+  apps` (or `chore: bump nixpkgs` when only `flake.lock` moved).
 - **Before merging:** CI must pass on both architectures.
