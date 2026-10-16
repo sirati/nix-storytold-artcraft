@@ -44,6 +44,7 @@ launcher entry and icons.
 - [Install with Home Manager](#install-with-home-manager)
 - [Choosing apps](#choosing-apps)
 - [Option reference](#option-reference)
+- [Sandboxed install](#sandboxed-install)
 - [Fonts](#fonts)
 - [Updating](#updating)
 - [Uninstalling](#uninstalling)
@@ -305,6 +306,84 @@ Without the modules, `overlays.default` adds `pkgs.craftapps.<name>`, plus
 nixpkgs.overlays = [ inputs.nix-storytold-artcraft.overlays.default ];
 environment.systemPackages = [ pkgs.craftapps.photocraft ];
 ```
+
+## Sandboxed install
+
+On NixOS the apps can run in rootless podman containers instead of directly on
+the machine. They still look and behave like any other Wayland application: the
+menu entry, the icon, the file associations, the GPU, the clipboard, the input
+method and the sound all work, and double-clicking a file opens it. What changes
+is what an app can reach.
+
+```nix
+programs.craftapps = {
+  enable = true;
+  enableAll = true;
+  sandbox.enable = true;
+};
+```
+
+The users who can run them need fixed uids (`users.users.<name>.uid`), because
+each user's launch plan is built ahead of time. By default every normal user is
+included; name them with `appSandbox.users`.
+
+**An app can see** its own configuration, data and cache (kept under
+`~/.var/app/<app>/`), the folders in `sandbox.userDirs` (Documents, Pictures,
+Videos, Music, Downloads, Desktop) and anything in `sandbox.paths`. With
+`sandbox.homeVisible = true` it sees every non-hidden entry of your home
+directory, as snap's `home` does, so a file opened from a file manager works
+wherever it is. Dotfiles (`~/.ssh`, `~/.config`, `~/.gnupg`) are never visible.
+Loose files directly in `~` are, so leave `homeVisible` off if some hold secrets.
+
+**An app cannot see** your other processes, the rest of your session bus (it
+gets the portals, notifications, the tray and the file manager, through a filter),
+or the host's network services. `sandbox.network = "none"` takes away the
+internet too.
+
+### Commands
+
+Each app `<app>` installs these:
+
+| command | what it does |
+| --- | --- |
+| `<app>` | the window |
+| `<app>-cli` | the app's own command line, in the same sandbox |
+| `<app>-mcp` | an MCP server attached to the window you have open, so an agent and you edit the same document |
+| `<app>-mcp-headless` | an MCP server with its own engine, for when no window is open |
+
+PdfCraft has no `-mcp`: its window is driven with `pdfcraft-cli ui --control
+/run/user/$UID/craftapps/pdfcraft/control.json <method>` instead.
+
+The window's control port is on the app's own loopback inside the container. The
+host and every other program on it cannot reach it. Only `<app>-mcp` and
+`<app>-cli`, which run in the same network namespace, can. Register the server in
+an MCP client like any stdio server, for example `claude mcp add photocraft --
+photocraft-mcp`. `sandbox.control.enable = false` starts the windows with no
+control port at all.
+
+### Options
+
+| Option | Default | |
+| --- | --- | --- |
+| `sandbox.enable` | `false` | run every enabled app in a container |
+| `sandbox.homeVisible` | `false` | every non-hidden entry of `~`, read-write |
+| `sandbox.userDirs` | the standard folders | folders under `~`, read-write |
+| `sandbox.paths` | none | more host paths (`path`, `mode = "rw" or "ro"`); `{user}` and `{home}` are filled in |
+| `sandbox.network` | `"pasta"` | `"none"` gives loopback only |
+| `sandbox.audio` | `true` | PipeWire and PulseAudio, and ALSA routed to them |
+| `sandbox.control.enable` | `true` | the control port and the `-mcp` commands |
+| `appSandbox.gpu.dri` | `["/dev/dri"]` | which DRM nodes the apps get, e.g. only the integrated GPU |
+| `appSandbox.gpu.devices` | NVIDIA nodes if configured | more device patterns |
+
+To steer an app at one GPU on a two-GPU machine, set `WGPU_ADAPTER_NAME` (for
+example `NVIDIA`) when you start it.
+
+### Limits
+
+- Accessibility (AT-SPI) is not bridged.
+- File dialogs use the portals when the session has them, and return host paths.
+- Native file drag-and-drop is not available on Wayland in the apps themselves.
+- The apps see the whole read-only Nix store, not only their own closure.
 
 ## Fonts
 

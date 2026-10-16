@@ -25,6 +25,9 @@ flake.nix                 outputs; checks build every app, test each CLI, eval t
 modules/common.nix        shared options (enable, enableAll, apps.<n>.{enable,package})
 modules/nixos.nix         + linkFonts (fonts.fontDir + /usr/share/fonts tmpfiles link)
 modules/home-manager.nix  home.packages; no linkFonts (HM cannot write /usr/share)
+modules/sandbox.nix       programs.craftapps.sandbox: each app in a rootless podman
+                          container (nixos-container-podman mkApp), per-app entries
+sandbox-apps.nix          per-app facts the sandbox needs: control port, MCP attach flags
 scripts/update.py         refreshes apps.json from GitHub releases (stdlib only)
 .github/workflows/ci.yml      nix flake check on x86_64 and aarch64 runners
 .github/workflows/update.yml  daily update.py → flake check on both arches → push to main
@@ -78,7 +81,11 @@ When storytold publishes a 13th app:
 4. Launch the GUI on a real session. Run `timeout 8 ./result/bin/<newapp>`;
    exit status 124 means it stayed up. If it panics about a missing library,
    add that library to `runtimeDependencies` in `package.nix`.
-5. Add it to the app tables in `README.md` and `llms.txt`. If it has its
+5. Add its entry to `sandbox-apps.nix`: the flag or variable that opens its
+   control port, the `<app>-cli mcp` arguments that attach to it, and how to
+   confine a headless MCP server. Take them from `<app>-cli --help` and the
+   binary, not from the README; the `sandbox` check fails without the entry.
+6. Add it to the app tables in `README.md` and `llms.txt`. If it has its
    own GPU switches (`strings` the binary for `*_GPU*`), note them in
    `docs/GPU.md`.
 
