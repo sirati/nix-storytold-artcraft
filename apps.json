@@ -185,17 +185,17 @@
     "repo": "storytold/vectorcraft",
     "sources": {
       "aarch64-linux": {
-        "hash": "sha256-/VlElOLxSYy32rAaOhCnDsjuaejdJqjtRoIZoPQZK1M=",
-        "url": "https://github.com/storytold/vectorcraft/releases/download/v0.11.0/vectorcraft-0.11.0-linux-aarch64.tar.gz"
+        "hash": "sha256-8eelwA68g9hCvFfcs115Ff7bCZZYXKLyep4esqaVa+g=",
+        "url": "https://github.com/storytold/vectorcraft/releases/download/v0.12.0/vectorcraft-0.12.0-linux-aarch64.tar.gz"
       },
       "x86_64-linux": {
-        "hash": "sha256-g8pipFW7sdHGHGsFEzvEHO2h0dmeS+dQnSh8Nkzrjzk=",
-        "url": "https://github.com/storytold/vectorcraft/releases/download/v0.11.0/vectorcraft-0.11.0-linux-x86_64.tar.gz"
+        "hash": "sha256-Z1DbEJ06JTxRyCl1r2UPQjhLonp2j3JSlDHt+1hQgmk=",
+        "url": "https://github.com/storytold/vectorcraft/releases/download/v0.12.0/vectorcraft-0.12.0-linux-x86_64.tar.gz"
       }
     },
-    "tag": "v0.11.0",
+    "tag": "v0.12.0",
     "title": "VectorCraft",
-    "version": "0.11.0"
+    "version": "0.12.0"
   },
   "wordcraft": {
     "description": "Word-style word processor",
