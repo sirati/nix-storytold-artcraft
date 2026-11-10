@@ -59,17 +59,17 @@
     "repo": "storytold/effectcraft",
     "sources": {
       "aarch64-linux": {
-        "hash": "sha256-smb0cTyPhg3SvIR5MEE8Ci+gf4LD83UqQMptDPAEZ7E=",
-        "url": "https://github.com/storytold/effectcraft/releases/download/v0.23.0/effectcraft-0.23.0-linux-aarch64.tar.gz"
+        "hash": "sha256-//jtdSuQ1jweSR9sxtJwD8cSL8FeH6tnQAAGUFK+8/4=",
+        "url": "https://github.com/storytold/effectcraft/releases/download/v0.23.1/effectcraft-0.23.1-linux-aarch64.tar.gz"
       },
       "x86_64-linux": {
-        "hash": "sha256-E9mrI7db57inF3XMlALg+DIoCxZhR0ZyglV+nGoh09I=",
-        "url": "https://github.com/storytold/effectcraft/releases/download/v0.23.0/effectcraft-0.23.0-linux-x86_64.tar.gz"
+        "hash": "sha256-ozDRQG/ecdB6xVrTf+gfXeN+x+p8p8O5+gKqzQRQLbE=",
+        "url": "https://github.com/storytold/effectcraft/releases/download/v0.23.1/effectcraft-0.23.1-linux-x86_64.tar.gz"
       }
     },
-    "tag": "v0.23.0",
+    "tag": "v0.23.1",
     "title": "EffectCraft",
-    "version": "0.23.0"
+    "version": "0.23.1"
   },
   "filmcraft": {
     "description": "Premiere-style video editor",
